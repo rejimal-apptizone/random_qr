@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:randnumber/randnumber.dart';
 import 'package:randnumber_example/ui/screens/dashboard/dashboard_screen.dart';
 import 'package:randnumber_example/ui/screens/login/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
