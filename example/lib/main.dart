@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:randnumber/randnumber.dart';
+import 'package:randnumber_example/ui/screens/dashboard/dashboard_screen.dart';
 
 import 'ui/screens/login/login_screen.dart';
 
@@ -38,7 +39,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: LoginScreen(),
+        body: DashboardScreen(),
       ),
     );
   }
