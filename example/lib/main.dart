@@ -3,6 +3,8 @@ import 'dart:async';
 
 import 'package:randnumber/randnumber.dart';
 
+import 'ui/screens/login/login_screen.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -36,12 +38,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Random Number'),
-        ),
-        body: Center(
-          child: Text('Random Number: $_randomNumber\n'),
-        ),
+        body: LoginScreen(),
       ),
     );
   }
