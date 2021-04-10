@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 class TopCircle extends StatelessWidget {
   final bool showLogoutButton;
+  final Function onTapHandler;
 
   const TopCircle({
     @required this.showLogoutButton,
+    this.onTapHandler,
   });
 
   @override
@@ -21,14 +23,17 @@ class TopCircle extends StatelessWidget {
           color: Color(0xFF3D3A6B),
         ),
         child: showLogoutButton
-            ? Center(
-                child: Container(
-                  margin: EdgeInsets.only(top: 25),
-                  child: Text(
-                    "Logout",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
+            ? GestureDetector(
+                onTap: onTapHandler,
+                child: Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 25),
+                    child: Text(
+                      "Logout",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
                     ),
                   ),
                 ),

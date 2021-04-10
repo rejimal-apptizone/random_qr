@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:randnumber/randnumber.dart';
+import 'package:randnumber_example/services/firebase_auth_service.dart';
+import 'package:randnumber_example/ui/screens/login/login_screen.dart';
 import 'package:randnumber_example/ui/widgets/custom_button.dart';
 import 'package:randnumber_example/ui/widgets/generated_qr_number.dart';
 import 'package:randnumber_example/ui/widgets/header_label.dart';
 import 'package:randnumber_example/ui/widgets/previous_qr_number.dart';
 import 'package:randnumber_example/ui/widgets/top_bar.dart';
 import 'package:randnumber_example/ui/widgets/top_circle.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -12,6 +16,48 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  FirebaseAuthService firebaseAuthService = FirebaseAuthService();
+  int _randomNumber;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getRandomNumber();
+  }
+
+  logout() async {
+    firebaseAuthService.logout();
+    await _clearLocalStorage();
+    _navToLoginScreen();
+  }
+
+  _navToLoginScreen() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => LoginScreen(),
+      ),
+    );
+  }
+
+  _clearLocalStorage() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.clear();
+  }
+
+  Future<void> _getRandomNumber() async {
+    int randomNumber;
+
+    randomNumber = await Randnumber.getRandom;
+    print(randomNumber);
+    if (!mounted) return;
+
+    setState(() {
+      _randomNumber = randomNumber;
+    });
+  }
+
   Widget _buildQrContainer() {
     return Container(
       margin: EdgeInsets.only(top: 150),
@@ -34,7 +80,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         margin: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
-            GeneratedQrNumber(),
+            GeneratedQrNumber(
+              randomNumber: _randomNumber.toString(),
+            ),
             PreviousQrNumber(),
             Container(
               margin: EdgeInsets.only(
@@ -44,7 +92,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               child: CustomButton(
                 labelName: "Save",
-                onTapHandler: () => print("Saved"),
+                onTapHandler: () => _getRandomNumber(),
               ),
             ),
           ],
@@ -64,6 +112,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             HeaderLabel(labelName: "Plugin"),
             TopCircle(
               showLogoutButton: true,
+              onTapHandler: logout,
             ),
           ],
         ),

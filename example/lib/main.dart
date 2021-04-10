@@ -18,23 +18,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _randomNumber;
-
   @override
   void initState() {
     super.initState();
-    _getRandomNumber();
-  }
-
-  Future<void> _getRandomNumber() async {
-    int randomNumber;
-
-    randomNumber = await Randnumber.getRandom;
-    if (!mounted) return;
-
-    setState(() {
-      _randomNumber = randomNumber;
-    });
   }
 
   @override

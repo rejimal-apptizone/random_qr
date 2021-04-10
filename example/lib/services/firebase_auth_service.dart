@@ -55,4 +55,8 @@ class FirebaseAuthService {
     prefs.setString("uid", userCredential.user.uid);
     print("userCredential.user.uid: ${userCredential.user.uid}");
   }
+
+  logout() {
+    auth.signOut();
+  }
 }
