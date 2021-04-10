@@ -7,14 +7,18 @@ class FirebaseDbService {
   saveQrDetails(int qrData) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    await FirebaseDatabase.instance
-        .reference()
-        .child(prefs.getString("uid"))
-        .set(
+    await firebaseDb.reference().child(prefs.getString("uid")).set(
       {
         "qrData": qrData,
         "qrImageUrl": "imageUrl",
       },
     );
+  }
+
+  getPreviousNumber() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    DataSnapshot snapshot =
+        await firebaseDb.reference().child(prefs.getString("uid")).once();
+    return snapshot.value["qrData"] ?? null;
   }
 }

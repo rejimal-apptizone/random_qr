@@ -26,8 +26,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-
+    _getPreviousNumber();
     _getRandomNumber();
+  }
+
+  _getPreviousNumber() async {
+    int previousNumber = await firebaseDbService.getPreviousNumber();
+    if (previousNumber != null) {
+      setState(() {
+        _previousNumber = previousNumber;
+      });
+    }
   }
 
   _saveQrDetails() async {
