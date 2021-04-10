@@ -11,7 +11,9 @@
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
   if ([@"getRandomNumber" isEqualToString:call.method]) {
-    result(100);
+    NSDate *date = [NSDate date];
+    double time_ms = [date timeIntervalSinceNow] * 1000.0;
+    result((int)time_ms);
   } else {
     result(FlutterMethodNotImplemented);
   }
