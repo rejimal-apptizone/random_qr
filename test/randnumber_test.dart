@@ -17,7 +17,7 @@ void main() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await Randnumber.platformVersion, '42');
+  test('getRandom', () async {
+    expect(await Randnumber.getRandom, 42);
   });
 }

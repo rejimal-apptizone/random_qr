@@ -9,6 +9,8 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
+import java.util.Random;
+
 /** RandnumberPlugin */
 public class RandnumberPlugin implements FlutterPlugin, MethodCallHandler {
   /// The MethodChannel that will the communication between Flutter and native Android
@@ -25,8 +27,10 @@ public class RandnumberPlugin implements FlutterPlugin, MethodCallHandler {
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    if (call.method.equals("getPlatformVersion")) {
-      result.success("Android " + android.os.Build.VERSION.RELEASE);
+    if (call.method.equals("getRandomNumber")) {
+      Random random = new Random();
+      int randomNumber = random.nextInt();
+      result.success(randomNumber);
     } else {
       result.notImplemented();
     }
