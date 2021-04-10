@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class NumberInput extends StatefulWidget {
+  final TextEditingController textEditingController;
+
+  const NumberInput({
+    Key key,
+    this.textEditingController,
+  }) : super(key: key);
+
   @override
   _NumberInputState createState() => _NumberInputState();
 }
@@ -14,6 +22,8 @@ class _NumberInputState extends State<NumberInput> {
         bottom: 20,
       ),
       child: TextField(
+        controller: widget.textEditingController,
+        keyboardType: TextInputType.number,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(
@@ -24,6 +34,9 @@ class _NumberInputState extends State<NumberInput> {
           filled: true,
           fillColor: Color(0xFF2E2B60),
         ),
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.digitsOnly
+        ],
       ),
     );
   }

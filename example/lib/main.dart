@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:randnumber/randnumber.dart';
 import 'package:randnumber_example/ui/screens/dashboard/dashboard_screen.dart';
+import 'package:randnumber_example/ui/screens/login/login_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +41,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: DashboardScreen(),
+        body: LoginScreen(),
       ),
     );
   }
