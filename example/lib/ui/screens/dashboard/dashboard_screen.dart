@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:randnumber/randnumber.dart';
 import 'package:randnumber_example/services/firebase_auth_service.dart';
+import 'package:randnumber_example/services/firebase_db_service.dart';
 import 'package:randnumber_example/ui/screens/login/login_screen.dart';
 import 'package:randnumber_example/ui/widgets/custom_button.dart';
 import 'package:randnumber_example/ui/widgets/generated_qr_number.dart';
@@ -17,13 +18,26 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   FirebaseAuthService firebaseAuthService = FirebaseAuthService();
+  FirebaseDbService firebaseDbService = FirebaseDbService();
+
   int _randomNumber;
+  int _previousNumber;
 
   @override
   void initState() {
     super.initState();
 
     _getRandomNumber();
+  }
+
+  _saveQrDetails() async {
+    if (_randomNumber != null) {
+      await firebaseDbService.saveQrDetails(_randomNumber);
+      setState(() {
+        _previousNumber = _randomNumber;
+      });
+      _getRandomNumber();
+    }
   }
 
   logout() async {
@@ -83,7 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             GeneratedQrNumber(
               randomNumber: _randomNumber.toString(),
             ),
-            PreviousQrNumber(),
+            PreviousQrNumber(previousNumber: _previousNumber),
             Container(
               margin: EdgeInsets.only(
                 left: 20,
@@ -92,7 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               child: CustomButton(
                 labelName: "Save",
-                onTapHandler: () => _getRandomNumber(),
+                onTapHandler: () => _saveQrDetails(),
               ),
             ),
           ],
