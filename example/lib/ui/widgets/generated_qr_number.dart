@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:randnumber_example/ui/widgets/custom_container.dart';
 
 class GeneratedQrNumber extends StatelessWidget {
   final String randomNumber;
@@ -31,29 +32,35 @@ class GeneratedQrNumber extends StatelessWidget {
                     ),
                     color: Color(0xFF121212),
                   ),
-                  child: Center(
-                    child: Container(
-                      margin: EdgeInsets.only(top: 30),
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          text: 'Generated number\n\n',
-                          style: DefaultTextStyle.of(context).style.copyWith(
-                                color: Colors.white,
-                                fontSize: 20,
-                              ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: randomNumber,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 30,
-                              ),
+                  child: Stack(
+                    children: [
+                      CustomContainer(),
+                      Center(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 30),
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              text: 'Generated number\n\n',
+                              style:
+                                  DefaultTextStyle.of(context).style.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: randomNumber,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 30,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
                 Align(
