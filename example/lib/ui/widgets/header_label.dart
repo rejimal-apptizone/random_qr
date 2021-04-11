@@ -13,7 +13,7 @@ class HeaderLabel extends StatelessWidget {
       child: Container(
         width: 100,
         height: 50,
-        margin: EdgeInsets.only(top: 125),
+        margin: EdgeInsets.only(top: 75),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           color: Color(0xFF11A3FF),

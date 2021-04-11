@@ -125,7 +125,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildQrContainer() {
     return Container(
-      margin: EdgeInsets.only(top: 150),
+      margin: EdgeInsets.only(top: 100),
       width: double.infinity,
       height: MediaQuery.of(context).size.height * .90,
       decoration: BoxDecoration(
@@ -153,7 +153,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               margin: EdgeInsets.only(
                 left: 20,
                 right: 20,
-                top: 20,
+                top: 100,
               ),
               child: CustomButton(
                 labelName: "Save",

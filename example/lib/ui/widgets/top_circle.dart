@@ -15,10 +15,11 @@ class TopCircle extends StatelessWidget {
       alignment: Alignment.topRight,
       child: Container(
         width: 150,
-        height: 150,
+        height: 100,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(100),
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(75),
+            bottomLeft: Radius.circular(75),
           ),
           color: Color(0xFF3D3A6B),
         ),
@@ -27,7 +28,7 @@ class TopCircle extends StatelessWidget {
                 onTap: onTapHandler,
                 child: Center(
                   child: Container(
-                    margin: EdgeInsets.only(top: 25),
+                    margin: EdgeInsets.only(top: 8),
                     child: Text(
                       "Logout",
                       style: TextStyle(

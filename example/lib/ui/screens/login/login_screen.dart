@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildLoginForm() {
     return Container(
-      margin: EdgeInsets.only(top: 150),
+      margin: EdgeInsets.only(top: 100),
       width: double.infinity,
       height: MediaQuery.of(context).size.height * .90,
       decoration: BoxDecoration(
