@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:randnumber_example/services/firebase_auth_service.dart';
+import 'package:randnumber_example/services/local_storage_service.dart';
 import 'package:randnumber_example/ui/screens/dashboard/dashboard_screen.dart';
 import 'package:randnumber_example/ui/widgets/custom_button.dart';
 import 'package:randnumber_example/ui/widgets/header_label.dart';
@@ -9,7 +10,6 @@ import 'package:randnumber_example/ui/widgets/input_label.dart';
 import 'package:randnumber_example/ui/widgets/number_input.dart';
 import 'package:randnumber_example/ui/widgets/top_bar.dart';
 import 'package:randnumber_example/ui/widgets/top_circle.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -17,6 +17,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _loginFormKey = GlobalKey<FormState>();
+
   final TextEditingController _phoneEditingController = TextEditingController();
   final TextEditingController _otpEditingController = TextEditingController();
 
@@ -27,21 +30,55 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
   }
 
-  Future<void> login() async {
-    final String phoneNumber = _phoneEditingController.text.trim();
-    final String otp = _otpEditingController.text.trim();
-    debugPrint(phoneNumber);
-    if (otp != null && otp.length == 6) {
-      await firebaseAuthService.signInWithPhoneNumber(otp);
-
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String uid = prefs.getString("uid");
-      if (uid != null) {
-        _navToDashboardScreen();
-      }
-    } else if (phoneNumber.length == 10) {
-      await firebaseAuthService.verifyPhoneNumber(phoneNumber);
+  String _validatePhoneNumber(String phoneNumber) {
+    String errorMessage;
+    if (phoneNumber.isEmpty) {
+      errorMessage = "Phone number cannot be empty";
+    } else if (phoneNumber.length != 10) {
+      errorMessage = "Enter valid phone number";
     }
+    return errorMessage;
+  }
+
+  Future<void> login() async {
+    final loginForm = _loginFormKey.currentState;
+    if (loginForm.validate()) {
+      debugPrint("Login form valid");
+      final String phoneNumber = _phoneEditingController.text.trim();
+      final String otp = _otpEditingController.text.trim();
+      debugPrint(otp);
+      if (otp != null && otp.length == 6) {
+        final String verificationId =
+            await LocalStorageService.getStringFromLocal(
+          key: "verificationId",
+        );
+
+        if (verificationId != null) {
+          await firebaseAuthService.signInWithPhoneNumber(otp, verificationId);
+          final String uid = await LocalStorageService.getStringFromLocal(
+            key: "uid",
+          );
+
+          if (uid != null) {
+            _navToDashboardScreen();
+          } else {
+            displaySnackBar("Invalid OTP");
+          }
+        } else {
+          displaySnackBar("Invalid OTP");
+        }
+      } else if (phoneNumber.length == 10) {
+        await firebaseAuthService.verifyPhoneNumber(phoneNumber);
+      }
+    }
+  }
+
+  void displaySnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 
   void _navToDashboardScreen() {
@@ -74,22 +111,26 @@ class _LoginScreenState extends State<LoginScreen> {
             vertical: 30,
           ),
           margin: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const InputLabel(labelName: "Phone number"),
-              NumberInput(
-                textEditingController: _phoneEditingController,
-              ),
-              const InputLabel(labelName: "OTP"),
-              NumberInput(
-                textEditingController: _otpEditingController,
-              ),
-              CustomButton(
-                labelName: "Login",
-                onTapHandler: login,
-              ),
-            ],
+          child: Form(
+            key: _loginFormKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const InputLabel(labelName: "Phone number"),
+                NumberInput(
+                  textEditingController: _phoneEditingController,
+                  validateHandler: _validatePhoneNumber,
+                ),
+                const InputLabel(labelName: "OTP"),
+                NumberInput(
+                  textEditingController: _otpEditingController,
+                ),
+                CustomButton(
+                  labelName: "Login",
+                  onTapHandler: login,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -99,6 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: SingleChildScrollView(
         child: Stack(
           children: [

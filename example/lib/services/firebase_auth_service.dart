@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:randnumber_example/services/local_storage_service.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -10,7 +10,7 @@ class FirebaseAuthService {
       phoneNumber: "+91 $phoneNumber",
       timeout: const Duration(seconds: 60),
       verificationCompleted: (AuthCredential authCredential) =>
-          onVerificationCompleted(authCredential),
+          saveUserDetails(authCredential),
       verificationFailed: (FirebaseAuthException authException) =>
           onVerificationFailed(authException),
       codeSent: (String verificationId, int forceResendingToken) =>
@@ -18,15 +18,6 @@ class FirebaseAuthService {
       codeAutoRetrievalTimeout: (String codeAutoRetrievalTimeout) =>
           onCodeAutoRetrievalTimeOut(codeAutoRetrievalTimeout),
     );
-  }
-
-  Future<void> onVerificationCompleted(AuthCredential authCredential) async {
-    final UserCredential userCredential =
-        await auth.signInWithCredential(authCredential);
-
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("uid", userCredential.user.uid);
-    debugPrint("userCredential.user.uid: ${userCredential.user.uid}");
   }
 
   Future<void> onVerificationFailed(FirebaseAuthException authException) async {
@@ -37,8 +28,10 @@ class FirebaseAuthService {
     String verificationId,
     int forceResendingToken,
   ) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("verificationId", verificationId);
+    LocalStorageService.setStringToLocal(
+      key: "verificationId",
+      value: verificationId,
+    );
   }
 
   Future<void> onCodeAutoRetrievalTimeOut(
@@ -47,21 +40,33 @@ class FirebaseAuthService {
     debugPrint("Code Auto Retrieval Timeout: $codeAutoRetrievalTimeout");
   }
 
-  Future<void> signInWithPhoneNumber(String smsCode) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
+  Future<void> signInWithPhoneNumber(
+      String smsCode, String verificationId) async {
     final AuthCredential authCredential = PhoneAuthProvider.credential(
-      verificationId: prefs.getString("verificationId"),
+      verificationId: verificationId,
       smsCode: smsCode,
     );
 
-    final UserCredential userCredential =
-        await auth.signInWithCredential(authCredential);
-    prefs.setString("uid", userCredential.user.uid);
-    debugPrint("userCredential.user.uid: ${userCredential.user.uid}");
+    if (authCredential != null) {
+      await saveUserDetails(authCredential);
+    }
+  }
+
+  Future<void> saveUserDetails(AuthCredential authCredential) async {
+    final UserCredential userCredential = await auth.signInWithCredential(
+      authCredential,
+    );
+
+    if (authCredential != null) {
+      LocalStorageService.setStringToLocal(
+        key: "uid",
+        value: userCredential.user.uid,
+      );
+    }
   }
 
   void logout() {
     auth.signOut();
+    LocalStorageService.clearLocalStorage();
   }
 }
