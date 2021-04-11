@@ -1,13 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
-  verifyPhoneNumber(String phoneNumber) async {
+  Future<void> verifyPhoneNumber(String phoneNumber) async {
     auth.verifyPhoneNumber(
       phoneNumber: "+91 $phoneNumber",
-      timeout: Duration(seconds: 60),
+      timeout: const Duration(seconds: 60),
       verificationCompleted: (AuthCredential authCredential) =>
           onVerificationCompleted(authCredential),
       verificationFailed: (FirebaseAuthException authException) =>
@@ -19,43 +20,48 @@ class FirebaseAuthService {
     );
   }
 
-  onVerificationCompleted(AuthCredential authCredential) async {
-    UserCredential userCredential =
+  Future<void> onVerificationCompleted(AuthCredential authCredential) async {
+    final UserCredential userCredential =
         await auth.signInWithCredential(authCredential);
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("uid", userCredential.user.uid);
-    print("userCredential.user.uid: ${userCredential.user.uid}");
+    debugPrint("userCredential.user.uid: ${userCredential.user.uid}");
   }
 
-  onVerificationFailed(FirebaseAuthException authException) {
-    print("Verification Failed: ${authException.message}");
+  Future<void> onVerificationFailed(FirebaseAuthException authException) async {
+    debugPrint("Verification Failed: ${authException.message}");
   }
 
-  onCodeSent(String verificationId, int forceResendingToken) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> onCodeSent(
+    String verificationId,
+    int forceResendingToken,
+  ) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("verificationId", verificationId);
   }
 
-  onCodeAutoRetrievalTimeOut(String codeAutoRetrievalTimeout) {
-    print("Code Auto Retrieval Timeout: $codeAutoRetrievalTimeout");
+  Future<void> onCodeAutoRetrievalTimeOut(
+    String codeAutoRetrievalTimeout,
+  ) async {
+    debugPrint("Code Auto Retrieval Timeout: $codeAutoRetrievalTimeout");
   }
 
-  signInWithPhoneNumber(String smsCode) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> signInWithPhoneNumber(String smsCode) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    AuthCredential authCredential = PhoneAuthProvider.getCredential(
+    final AuthCredential authCredential = PhoneAuthProvider.credential(
       verificationId: prefs.getString("verificationId"),
       smsCode: smsCode,
     );
 
-    UserCredential userCredential =
+    final UserCredential userCredential =
         await auth.signInWithCredential(authCredential);
     prefs.setString("uid", userCredential.user.uid);
-    print("userCredential.user.uid: ${userCredential.user.uid}");
+    debugPrint("userCredential.user.uid: ${userCredential.user.uid}");
   }
 
-  logout() {
+  void logout() {
     auth.signOut();
   }
 }

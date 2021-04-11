@@ -4,8 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class FirebaseDbService {
   FirebaseDatabase firebaseDb = FirebaseDatabase.instance;
 
-  saveQrDetails(int qrData, String qrImageurl) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> saveQrDetails(int qrData, String qrImageurl) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await firebaseDb.reference().child(prefs.getString("uid")).set(
       {
@@ -15,10 +15,14 @@ class FirebaseDbService {
     );
   }
 
-  getPreviousNumber() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    DataSnapshot snapshot =
-        await firebaseDb.reference().child(prefs.getString("uid")).once();
-    return snapshot.value["qrData"] ?? null;
+  Future<int> getPreviousNumber() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final DataSnapshot snapshot = await firebaseDb
+        .reference()
+        .child(
+          prefs.getString("uid"),
+        )
+        .once();
+    return snapshot.value["qrData"] as int;
   }
 }

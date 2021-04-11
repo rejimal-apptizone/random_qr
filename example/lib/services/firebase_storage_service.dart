@@ -6,14 +6,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 class FirebaseStorageService {
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
-  uploadImage(String filePath) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var snapshot = await firebaseStorage
+  Future<String> uploadImage(String filePath) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final snapshot = await firebaseStorage
         .ref()
         .child(prefs.getString("uid"))
         .putFile(File(filePath))
         .onComplete;
-    var downloadUrl = await snapshot.ref.getDownloadURL();
+    final downloadUrl = await snapshot.ref.getDownloadURL() as String;
     return downloadUrl;
   }
 }

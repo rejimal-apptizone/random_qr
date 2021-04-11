@@ -1,0 +1,13 @@
+include: package:lint/analysis_options.yaml
+
+# Enabling linter rules
+linter:
+  rules:
+    - parameter_assignments
+
+# Modifying rules severity 
+analyzer:
+  errors:
+    missing_required_param: error
+    parameter_assignments: error
+    missing_return: error

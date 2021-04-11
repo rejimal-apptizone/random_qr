@@ -38,8 +38,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _getRandomNumber();
   }
 
-  _getPreviousNumber() async {
-    int previousNumber = await firebaseDbService.getPreviousNumber();
+  Future<void> _getPreviousNumber() async {
+    final int previousNumber = await firebaseDbService.getPreviousNumber();
     if (previousNumber != null) {
       setState(() {
         _previousNumber = previousNumber;
@@ -47,10 +47,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  _saveQrDetails() async {
+  Future<void> _saveQrDetails() async {
     if (_randomNumber != null) {
-      String path = await _createQrImage();
-      String qrImageurl = await firebaseStorageService.uploadImage(path);
+      final String path = await _createQrImage();
+      final String qrImageurl = await firebaseStorageService.uploadImage(path);
       await firebaseDbService.saveQrDetails(_randomNumber, qrImageurl);
       setState(() {
         _previousNumber = _randomNumber;
@@ -59,7 +59,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  _createQrImage() async {
+  Future<String> _createQrImage() async {
     final qrValidationResult = QrValidator.validate(
       data: _randomNumber.toString(),
       version: QrVersions.auto,
@@ -70,17 +70,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
       qr: qrValidationResult.qrCode,
       color: const Color(0xFF000000),
       gapless: true,
-      embeddedImageStyle: null,
-      embeddedImage: null,
     );
 
-    Directory tempDir = await getApplicationSupportDirectory();
-    String tempPath = tempDir.path;
+    final Directory tempDir = await getApplicationSupportDirectory();
+    final String tempPath = tempDir.path;
     final ts = DateTime.now().millisecondsSinceEpoch.toString();
-    String path = '$tempPath/$ts.png';
+    final String path = '$tempPath/$ts.png';
 
-    final picData =
-        await painter.toImageData(2048, format: ImageByteFormat.png);
+    final picData = await painter.toImageData(
+      2048,
+      format: ImageByteFormat.png,
+    );
     await writeToFile(picData, path);
     return path;
   }
@@ -91,13 +91,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
-  logout() async {
+  Future<void> logout() async {
     firebaseAuthService.logout();
     await _clearLocalStorage();
     _navToLoginScreen();
   }
 
-  _navToLoginScreen() {
+  void _navToLoginScreen() {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -106,8 +106,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  _clearLocalStorage() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
+  Future<void> _clearLocalStorage() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
     pref.clear();
   }
 
@@ -115,7 +115,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     int randomNumber;
 
     randomNumber = await Randnumber.getRandom;
-    print(randomNumber);
+    debugPrint(randomNumber.toString());
     if (!mounted) return;
 
     setState(() {
@@ -125,10 +125,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildQrContainer() {
     return Container(
-      margin: EdgeInsets.only(top: 100),
+      margin: const EdgeInsets.only(top: 100),
       width: double.infinity,
       height: MediaQuery.of(context).size.height * .90,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
@@ -138,11 +138,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Container(
         height: 400,
         width: double.infinity,
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 25,
           vertical: 30,
         ),
-        margin: EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
             GeneratedQrNumber(
@@ -150,7 +150,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             PreviousQrNumber(previousNumber: _previousNumber),
             Container(
-              margin: EdgeInsets.only(
+              margin: const EdgeInsets.only(
                 left: 20,
                 right: 20,
                 top: 100,
@@ -174,7 +174,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             TopBar(),
             _buildQrContainer(),
-            HeaderLabel(labelName: "Plugin"),
+            const HeaderLabel(labelName: "Plugin"),
             TopCircle(
               showLogoutButton: true,
               onTapHandler: logout,

@@ -11,7 +11,7 @@ class InputLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       labelName,
-      style: TextStyle(
+      style: const TextStyle(
         color: Colors.white,
         fontSize: 20,
       ),

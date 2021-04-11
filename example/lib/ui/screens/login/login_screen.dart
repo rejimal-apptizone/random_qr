@@ -17,8 +17,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController _phoneEditingController = TextEditingController();
-  TextEditingController _otpEditingController = TextEditingController();
+  final TextEditingController _phoneEditingController = TextEditingController();
+  final TextEditingController _otpEditingController = TextEditingController();
 
   FirebaseAuthService firebaseAuthService = FirebaseAuthService();
 
@@ -27,15 +27,15 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
   }
 
-  login() async {
-    String phoneNumber = _phoneEditingController.text.trim();
-    String otp = _otpEditingController.text.trim();
-    print(phoneNumber);
+  Future<void> login() async {
+    final String phoneNumber = _phoneEditingController.text.trim();
+    final String otp = _otpEditingController.text.trim();
+    debugPrint(phoneNumber);
     if (otp != null && otp.length == 6) {
       await firebaseAuthService.signInWithPhoneNumber(otp);
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String uid = prefs.getString("uid");
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String uid = prefs.getString("uid");
       if (uid != null) {
         _navToDashboardScreen();
       }
@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  _navToDashboardScreen() {
+  void _navToDashboardScreen() {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -55,10 +55,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildLoginForm() {
     return Container(
-      margin: EdgeInsets.only(top: 100),
+      margin: const EdgeInsets.only(top: 100),
       width: double.infinity,
       height: MediaQuery.of(context).size.height * .90,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
@@ -69,19 +69,19 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Container(
           height: 400,
           width: double.infinity,
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             horizontal: 25,
             vertical: 30,
           ),
-          margin: EdgeInsets.symmetric(horizontal: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InputLabel(labelName: "Phone number"),
+              const InputLabel(labelName: "Phone number"),
               NumberInput(
                 textEditingController: _phoneEditingController,
               ),
-              InputLabel(labelName: "OTP"),
+              const InputLabel(labelName: "OTP"),
               NumberInput(
                 textEditingController: _otpEditingController,
               ),
@@ -104,10 +104,8 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             TopBar(),
             _buildLoginForm(),
-            HeaderLabel(labelName: "Login"),
-            TopCircle(
-              showLogoutButton: false,
-            ),
+            const HeaderLabel(labelName: "Login"),
+            const TopCircle(showLogoutButton: false),
           ],
         ),
       ),

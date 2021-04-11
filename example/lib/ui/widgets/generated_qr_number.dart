@@ -13,20 +13,20 @@ class GeneratedQrNumber extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return randomNumber != null
-        ? Container(
+        ? SizedBox(
             height: 400,
             width: double.infinity,
             child: Stack(
               children: [
                 Container(
-                  margin: EdgeInsets.only(
+                  margin: const EdgeInsets.only(
                     top: 175,
                     left: 20,
                     right: 20,
                   ),
                   width: double.infinity,
                   height: 175,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(
                       Radius.circular(12),
                     ),
@@ -37,7 +37,7 @@ class GeneratedQrNumber extends StatelessWidget {
                       CustomContainer(),
                       Center(
                         child: Container(
-                          margin: EdgeInsets.only(top: 30),
+                          margin: const EdgeInsets.only(top: 30),
                           child: RichText(
                             textAlign: TextAlign.center,
                             text: TextSpan(
@@ -50,7 +50,7 @@ class GeneratedQrNumber extends StatelessWidget {
                               children: <TextSpan>[
                                 TextSpan(
                                   text: randomNumber,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 30,
                                   ),
@@ -68,15 +68,15 @@ class GeneratedQrNumber extends StatelessWidget {
                   child: Container(
                     width: 200,
                     height: 200,
-                    margin: EdgeInsets.only(top: 25),
-                    child: QrImage(
-                      data: randomNumber,
-                    ),
-                    decoration: BoxDecoration(
+                    margin: const EdgeInsets.only(top: 25),
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(
                         Radius.circular(12),
                       ),
+                    ),
+                    child: QrImage(
+                      data: randomNumber,
                     ),
                   ),
                 ),

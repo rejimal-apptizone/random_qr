@@ -14,17 +14,17 @@ class CustomButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTapHandler,
       child: Container(
-        margin: EdgeInsets.only(top: 40),
+        margin: const EdgeInsets.only(top: 40),
         width: double.infinity,
         height: 60,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           color: Color(0xFF3E3E3E),
         ),
         child: Center(
           child: Text(
             labelName.toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 24,

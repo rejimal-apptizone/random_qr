@@ -12,26 +12,26 @@ class PreviousQrNumber extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return previousNumber != null
-        ? Container(
+        ? SizedBox(
             width: double.infinity,
             child: Stack(
               children: [
                 Container(
-                  margin: EdgeInsets.only(
+                  margin: const EdgeInsets.only(
                     top: 4,
                     left: 20,
                     right: 20,
                   ),
                   width: double.infinity,
                   height: 90,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(
                       Radius.circular(12),
                     ),
                     color: Color(0xFF121212),
                   ),
                   child: Container(
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                       top: 8,
                       left: 120,
                     ),
@@ -45,7 +45,7 @@ class PreviousQrNumber extends StatelessWidget {
                         children: <TextSpan>[
                           TextSpan(
                             text: previousNumber.toString(),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
                               color: Colors.white,
@@ -61,14 +61,14 @@ class PreviousQrNumber extends StatelessWidget {
                   child: Container(
                     width: 90,
                     height: 90,
-                    margin: EdgeInsets.only(left: 25),
-                    child: QrImage(data: previousNumber.toString()),
-                    decoration: BoxDecoration(
+                    margin: const EdgeInsets.only(left: 25),
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(
                         Radius.circular(12),
                       ),
                     ),
+                    child: QrImage(data: previousNumber.toString()),
                   ),
                 ),
               ],

@@ -11,8 +11,8 @@ class CustomContainer extends StatelessWidget {
           child: Container(
             width: MediaQuery.of(context).size.width,
             height: 250,
-            decoration: BoxDecoration(
-              color: const Color(0xFF2E2B60),
+            decoration: const BoxDecoration(
+              color: Color(0xFF2E2B60),
               borderRadius: BorderRadius.all(
                 Radius.circular(16),
               ),
@@ -26,8 +26,8 @@ class CustomContainer extends StatelessWidget {
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: 250,
-              decoration: BoxDecoration(
-                color: const Color(0xFF121212),
+              decoration: const BoxDecoration(
+                color: Color(0xFF121212),
                 borderRadius: BorderRadius.all(
                   Radius.circular(16),
                 ),
