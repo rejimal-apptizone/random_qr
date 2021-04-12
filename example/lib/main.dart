@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:randnumber_example/ui/screens/login/login_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:randnumber_example/services/firebase_auth_service.dart';
+import 'package:randnumber_example/ui/widgets/auth_widget.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,15 +19,17 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: LoginScreen(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<FirebaseAuthService>(
+          create: (_) => FirebaseAuthService(),
+        ),
+      ],
+      child: MaterialApp(
+        home: Scaffold(
+          body: AuthWidget(),
+        ),
       ),
     );
   }

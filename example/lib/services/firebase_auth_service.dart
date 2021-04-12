@@ -1,9 +1,30 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:randnumber_example/services/local_storage_service.dart';
 
-class FirebaseAuthService {
+class FirebaseAuthService extends ChangeNotifier {
+  User user;
+  StreamSubscription userAuthSubscription;
+
   final FirebaseAuth auth = FirebaseAuth.instance;
+
+  FirebaseAuthService() {
+    userAuthSubscription = FirebaseAuth.instance.authStateChanges().listen(
+      (newUser) {
+        user = newUser;
+        notifyListeners();
+      },
+      onError: (e) {
+        debugPrint('FirebaseAuthService - onAuthStateChanges - $e');
+      },
+    );
+  }
+
+  bool get isAuthenticated {
+    return user != null;
+  }
 
   Future<void> verifyPhoneNumber(String phoneNumber) async {
     auth.verifyPhoneNumber(
@@ -68,5 +89,15 @@ class FirebaseAuthService {
   void logout() {
     auth.signOut();
     LocalStorageService.clearLocalStorage();
+  }
+
+
+  @override
+  void dispose() {
+    if (userAuthSubscription != null) {
+      userAuthSubscription.cancel();
+      userAuthSubscription = null;
+    }
+    super.dispose();
   }
 }
